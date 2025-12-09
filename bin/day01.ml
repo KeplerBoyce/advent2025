@@ -1,16 +1,6 @@
 (* Part 1 *)
-let split s =
-  List.init (String.length s) (String.get s)
-
-let get_parts s =
-  match split s with
-    | first :: rest ->
-      let rest_str = List.to_seq rest |> String.of_seq in
-      (first, rest_str)
-    | _ -> (' ', "")
-
 let adjust (str, num) =
-  let first, rest_str = get_parts str in
+  let first, rest_str = Util.head_and_rest str in
   let amount = int_of_string rest_str in
   match first with
     | 'R' -> (num + amount) mod 100
@@ -18,8 +8,7 @@ let adjust (str, num) =
     | _ -> num
 
 let () =
-  let filename = "inputs/day01" in
-  let lines = Util.read_lines filename in
+  let lines = Util.read_lines "inputs/day01" in
   let process_line (value, count) line =
     let result = adjust (line, value) in
     match result with
@@ -32,7 +21,7 @@ let () =
 
 (* Part 2 *)
 let adjust2 (str, num) =
-  let first, rest_str = get_parts str in
+  let first, rest_str = Util.head_and_rest str in
   let amount = int_of_string rest_str in
   let res = match first with
     | 'R' -> (num + amount) mod 100
@@ -55,8 +44,7 @@ let adjust2 (str, num) =
   (res, clicks)
 
 let () =
-  let filename = "inputs/day01" in
-  let lines = Util.read_lines filename in
+  let lines = Util.read_lines "inputs/day01" in
   let process_line (value, count) line =
     let (result, clicks) = adjust2 (line, value) in
     (result, count + clicks)

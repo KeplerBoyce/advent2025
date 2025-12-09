@@ -1,3 +1,5 @@
 (library
+ (wrapped false)
  (name aoc_util)
- (modules util))
+ (modules util)
+ (libraries base))

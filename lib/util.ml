@@ -4,8 +4,8 @@ let read_lines filename =
     try
       let line = input_line ic in
       read_loop (line :: acc)
-  with
-    | End_of_file -> close_in ic; List.rev acc
+    with
+      | End_of_file -> close_in ic; List.rev acc
   in read_loop []
 
 let read_first filename =
@@ -13,6 +13,19 @@ let read_first filename =
   match lines with
     | [] -> failwith "No lines in input file"
     | head :: _ -> head
+
+let split_blank_line lines =
+  let rec loop front rem =
+    let line, rest = match rem with
+      | h :: t -> (h, t)
+      | [] -> failwith "Reached end of lines list"
+    in
+    if (String.length) line = 0 then
+      (List.rev front, rest)
+    else
+      loop (line :: front) rest
+  in
+  loop [] lines
 
 let split s =
   List.init (String.length s) (String.get s)
@@ -37,3 +50,28 @@ let split_range str =
     | head :: tail -> match tail with
       | [] -> failwith "No numbers in range"
       | head2 :: _ -> (int_of_string head, int_of_string head2)
+
+let add_no_duplicate list item =
+  if List.exists (fun x -> x = item) list then
+    list
+  else
+    item :: list
+
+let merge_no_duplicate list1 list2 =
+  let rec merge_loop acc rem =
+    match rem with
+      | head :: tail ->
+          let merged = add_no_duplicate acc head in
+          merge_loop merged tail
+      | [] -> acc
+  in
+  merge_loop list1 list2
+
+let list_range low high =
+  let rec loop i acc =
+    if i > high then
+      List.rev acc
+    else
+      loop (i + 1) (i :: acc)
+  in
+  loop low []

@@ -29,3 +29,11 @@ let int_of_char c =
 
 let char_of_int x =
   Char.chr (Char.code '0' + x)
+
+let split_range str =
+  let nums = String.split_on_char '-' str in
+  match nums with
+    | [] -> failwith "No numbers in range"
+    | head :: tail -> match tail with
+      | [] -> failwith "No numbers in range"
+      | head2 :: _ -> (int_of_string head, int_of_string head2)

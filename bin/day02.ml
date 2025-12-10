@@ -1,11 +1,3 @@
-let split_range str =
-  let nums = String.split_on_char '-' str in
-  match nums with
-    | [] -> failwith "No numbers in range"
-    | head :: tail -> match tail with
-      | [] -> failwith "No numbers in range"
-      | head2 :: _ -> (int_of_string head, int_of_string head2)
-
 let sum_invalid (invalid_fn: string -> bool) count range =
   let (low, high) = range in
   let rec check_num value num_count =
@@ -36,7 +28,7 @@ let () =
     first = second
   in
 
-  let ranges = List.map split_range ranges in
+  let ranges = List.map Util.split_range ranges in
   let fold_fn = sum_invalid is_invalid in
   let answer = List.fold_left fold_fn 0 ranges in
   print_endline (string_of_int answer)
@@ -77,7 +69,7 @@ let () =
     check_pattern 1
   in
 
-  let ranges = List.map split_range ranges in
+  let ranges = List.map Util.split_range ranges in
   let fold_fn = sum_invalid is_invalid2 in
   let answer = List.fold_left fold_fn 0 ranges in
   print_endline (string_of_int answer)

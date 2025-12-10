@@ -22,11 +22,30 @@ let () =
   let (ranges, _) = Util.split_blank_line lines in
   let ranges = List.map Util.split_range ranges in
 
-  let merge_fn acc range =
-    let (low, high) = range in
-    let range_list = Util.list_range low high in
-    Util.merge_no_duplicate acc range_list
+  let compare range1 range2 =
+    let (low1, _) = range1 in
+    let (low2, _) = range2 in
+    low1 - low2
   in
-  let fresh = List.fold_left merge_fn [] ranges in
-  let answer = List.length fresh in
+  let sorted = List.sort compare ranges in
+
+  let rec num_unique (num, prev) rem =
+    let (prev_low, prev_high) = prev in
+    match rem with
+    | [] -> num + prev_high - prev_low + 1
+    | head :: tail ->
+        let (low, high) = head in
+        if low <= prev_high then
+          let next = (prev_low, max prev_high high) in
+          num_unique (num, next) tail
+        else
+          let added = prev_high - prev_low + 1 in
+          num_unique (num + added, head) tail
+  in
+
+  let (first, rem) = match sorted with
+  | head :: tail -> (head, tail)
+  | [] -> failwith "Nothing in sorted ranges list"
+  in
+  let answer = num_unique (0, first) rem in
   print_endline (string_of_int answer)

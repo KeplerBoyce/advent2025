@@ -51,6 +51,33 @@ let split_range str =
       | [] -> failwith "No numbers in range"
       | head2 :: _ -> (int_of_string head, int_of_string head2)
 
+let split_spaces str =
+  let rec loop list rem =
+    if String.length rem = 0 then
+      List.rev list
+    else
+    match (String.index_from_opt rem 0 ' ') with
+    | None ->
+        loop (rem :: list) ""
+    | Some index ->
+        let keep = String.sub rem 0 index in
+        let len = String.length rem in
+        let rest = String.sub rem index (len - index) in
+        loop (keep :: list) (String.trim rest)
+  in
+  loop [] str
+
+let zip lists =
+  let rec process_list acc rem =
+    match rem with
+    | [] -> List.map (List.rev) acc
+    | list :: rest ->
+        let new_acc = List.map2 (fun e l -> e :: l) list acc in
+        process_list new_acc rest
+  in
+  let empty = List.map (fun _ -> []) (List.hd lists) in
+  process_list empty lists
+
 let add_no_duplicate list item =
   if List.exists (fun x -> x = item) list then
     list

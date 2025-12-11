@@ -137,3 +137,21 @@ let add_list_to_set set list =
       | [] -> acc
   in
   add_loop set list
+
+let sum list = List.fold_left (fun a b -> a + b) 0 list
+
+let print_int_list list =
+  let rec loop str rem =
+    match rem with
+    | head :: tail ->
+      let new_str = if str = "" then
+        "{ " ^ (string_of_int head)
+      else
+        str ^ ", " ^ (string_of_int head) in
+      loop new_str tail
+    | [] -> str ^ " }"
+  in
+  let str = loop "" list in
+  Printf.printf "%s\n" str
+
+let print_int x = print_endline (string_of_int x)

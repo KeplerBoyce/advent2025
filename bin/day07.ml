@@ -56,3 +56,47 @@ let () =
   let start = String.map start_map_fn head in
   let answer = count_splits 0 start tail in
   print_endline (string_of_int answer)
+
+(* Part 2 *)
+let advance_counts counts row =
+  let len = String.length row in
+  let counts_arr = Array.of_list counts in
+  let map_fn i count =
+    let ways_from_left =
+      if i = 0 then 0
+      else
+        let c = String.get row (i - 1) in
+        if c = '^' then counts_arr.(i - 1)
+        else 0
+    in
+    let ways_from_right =
+      if i = (len - 1) then 0
+      else
+        let c = String.get row (i + 1) in
+        if c = '^' then counts_arr.(i + 1)
+        else 0
+    in
+    let ways_from_above =
+      let c = String.get row i in
+      if c = '^' then 0
+      else count
+    in
+    ways_from_left + ways_from_right + ways_from_above
+  in
+  List.mapi map_fn counts
+
+let () =
+  let lines = Util.read_lines "inputs/day07" in
+  let (first, tail) = match lines with
+  | [] -> failwith "No lines in input"
+  | h :: t -> (Util.split h, t)
+  in
+  let init_map_fn c =
+    if c = 'S' then 1
+    else 0
+  in
+  let counts = List.map init_map_fn first in
+
+  let final_counts = List.fold_left advance_counts counts tail in
+  let answer = Util.sum final_counts in
+  Util.print_int answer

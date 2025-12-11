@@ -43,6 +43,10 @@ let int_of_char c =
 let char_of_int x =
   Char.chr (Char.code '0' + x)
 
+let is_digit c =
+  let code = Char.code c in
+  code >= Char.code '0' && code <= Char.code '9'
+
 let split_range str =
   let nums = String.split_on_char '-' str in
   match nums with
@@ -66,6 +70,18 @@ let split_spaces str =
         loop (keep :: list) (String.trim rest)
   in
   loop [] str
+
+let strip_spaces char_list =
+  let rec loop list rem =
+    match rem with
+    | [] -> List.rev list
+    | head :: tail -> 
+      if head = ' ' then
+        loop list tail
+      else
+        loop (head :: list) tail
+  in
+  loop [] char_list
 
 let zip lists =
   let rec process_list acc rem =

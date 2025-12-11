@@ -155,3 +155,14 @@ let print_int_list list =
   Printf.printf "%s\n" str
 
 let print_int x = print_endline (string_of_int x)
+
+let list_pairs in_list =
+  let rec loop list =
+    match list with
+    | [] -> []
+    | head :: tail ->
+        let pairs_with_head = List.map (fun other -> (head, other)) tail in
+        let rem_pairs = loop tail in
+        pairs_with_head @ rem_pairs
+  in
+  loop in_list

@@ -151,3 +151,20 @@ let list_pairs in_list =
         pairs_with_head @ rem_pairs
   in
   loop in_list
+
+let wrap_list list =
+  List.rev ((List.hd list) :: (List.rev list))
+
+let next_cyclic list elem =
+  let wrapped = wrap_list list in
+  let rec loop rem =
+    match rem with
+    | head :: next :: tail ->
+      if head = elem then next
+      else loop (next :: tail)
+    | _ -> failwith "Not found"
+  in
+  loop wrapped
+
+let prev_cyclic list elem =
+  next_cyclic (List.rev list) elem

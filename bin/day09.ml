@@ -36,7 +36,7 @@ let get_edge_tiles points =
         let x_list = Util.list_range (low_x + 1) (high_x - 1) in
         List.map (fun x_val -> (x_val, y)) x_list
       in
-      loop (new_coords @ acc) ((next_x, next_y) :: rest)
+      loop (new_coords :: acc) ((next_x, next_y) :: rest)
     | _ -> acc
   in
   loop [] (Util.wrap_list points)
@@ -47,13 +47,17 @@ let valid points ((x1, y1), (x2, y2)) =
     let (low_y, high_y) = (min y1 y2, max y1 y2) in
     x > low_x && x < high_x && y > low_y && y < high_y
   in
-  let fold_fn acc point = acc || (inside point) in
 
+  let fold_fn acc point = acc || (inside point) in
   if List.fold_left fold_fn false points then
     false
   else
-  let edge_tiles = get_edge_tiles points in
-  not (List.fold_left fold_fn false edge_tiles)
+
+  let edge_lists = get_edge_tiles points in
+  let edge_fold_fn acc edge_list =
+    acc || (List.fold_left fold_fn false edge_list)
+  in
+  not (List.fold_left edge_fold_fn false edge_lists)
 
 let () =
   let lines = Util.read_lines "inputs/day09" in

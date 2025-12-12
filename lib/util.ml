@@ -119,26 +119,11 @@ let list_range low high =
   in
   loop low []
 
-module UnordSet = struct
-  type 'a t = ('a, unit) Hashtbl.t
-  let create initial_size = Hashtbl.create initial_size
-  let add set element = Hashtbl.add set element ()
-  let mem set element = Hashtbl.mem set element
-  let remove set element = Hashtbl.remove set element
-  let size set = Hashtbl.fold (fun _ _ acc -> acc + 1) set 0
-end
-
-let add_list_to_set set list =
-  let rec add_loop acc rem =
-    match rem with
-      | head :: tail ->
-          let () = UnordSet.add acc head in
-          add_loop acc tail
-      | [] -> acc
-  in
-  add_loop set list
-
 let sum list = List.fold_left (fun a b -> a + b) 0 list
+
+let sort_up list = List.sort (fun a b -> a - b) list
+
+let sort_down list = List.sort (fun a b -> b - a) list
 
 let print_int_list list =
   let rec loop str rem =

@@ -126,15 +126,17 @@ let sort_up list = List.sort (fun a b -> a - b) list
 let sort_down list = List.sort (fun a b -> b - a) list
 
 let print_int_list list =
+  if List.length list = 0 then print_endline "{}"
+  else
   let rec loop str rem =
     match rem with
     | head :: tail ->
       let new_str = if str = "" then
-        "{ " ^ (string_of_int head)
+        "{" ^ (string_of_int head)
       else
         str ^ ", " ^ (string_of_int head) in
       loop new_str tail
-    | [] -> str ^ " }"
+    | [] -> str ^ "}"
   in
   let str = loop "" list in
   Printf.printf "%s\n" str
@@ -168,3 +170,14 @@ let next_cyclic list elem =
 
 let prev_cyclic list elem =
   next_cyclic (List.rev list) elem
+
+let power_set list =
+  let rec loop acc so_far rem =
+    match rem with
+    | [] -> so_far :: acc
+    | head :: tail ->
+      let with_elem = loop acc (head :: so_far) tail in
+      let without_elem = loop acc so_far tail in
+      with_elem @ without_elem @ acc
+  in
+  loop [] [] list

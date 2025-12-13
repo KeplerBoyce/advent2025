@@ -30,6 +30,10 @@ let split_blank_line lines =
 let split s =
   List.init (String.length s) (String.get s)
 
+let merge char_list =
+  let fold_fn acc c = (String.make 1 c) ^ acc in
+  List.fold_left fold_fn "" char_list
+
 let head_and_rest s =
   match split s with
     | first :: rest ->

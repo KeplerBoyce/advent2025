@@ -27,6 +27,19 @@ let split_blank_line lines =
   in
   loop [] lines
 
+let split_blanks lines =
+  let rec loop acc section rem =
+    match rem with
+    | [] -> List.rev (section :: acc)
+    | line :: rest -> begin
+        if (String.length) line = 0 then
+          loop ((List.rev section) :: acc) [] rest
+        else
+          loop acc (line :: section) rest
+      end
+  in
+  loop [] [] lines
+
 let split s =
   List.init (String.length s) (String.get s)
 
